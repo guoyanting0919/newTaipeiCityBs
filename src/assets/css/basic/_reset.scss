@@ -1,0 +1,36 @@
+* {
+  position: relative;
+}
+
+body {
+  font-family: "PingFang TC", "LiHei Pro", "Microsoft JhengHei", "微軟正黑體",
+    "Segoe UI Semibold", "Segoe UI", "Lucida Grande", Verdana, Helvetica, Arial,
+    sans-serif;
+}
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+p,
+span,
+i,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+}

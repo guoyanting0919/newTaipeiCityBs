@@ -1,0 +1,10 @@
+@mixin rwd($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+// @include rwd($sm) {
+//     height: 60px;
+//     line-height: 60px;
+//   }
