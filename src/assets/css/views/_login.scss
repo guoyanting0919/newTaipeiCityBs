@@ -1,0 +1,269 @@
+#Login {
+  .loginContainer {
+    width: 100%;
+    height: 100vh;
+    background-image: url("../assets/images/loginBG.png");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .loginTitle,
+  .adminLogin,
+  .forgetBox,
+  .letterBox,
+  .newPwBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: $colorWhite;
+    margin-bottom: 3rem;
+  }
+
+  .newPwBox {
+    @include rwd($sm) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .cityTitle {
+    font-size: 4rem;
+    letter-spacing: 6px;
+
+    @include rwd($sm) {
+      font-size: 3rem;
+    }
+  }
+
+  .cityDescrip {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+
+    @include rwd($sm) {
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .adminLoginTitle,
+  .forgetTitle,
+  .letterTitle,
+  .newPwTitle {
+    font-size: 3rem;
+    letter-spacing: 3px;
+    font-weight: 500;
+
+    @include rwd($sm) {
+      font-size: 1.5rem;
+      letter-spacing: 1.5px;
+      text-align: center;
+    }
+  }
+
+  .adminLoginDescrip,
+  .forgetDescrip,
+  .letterDescrip {
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 1.2px;
+    margin-top: 0.5rem;
+
+    @include rwd($sm) {
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 0 1rem;
+    }
+  }
+
+  .loginBox,
+  .forgetInput,
+  .letterInput,
+  .newPwInput {
+    width: 490px;
+    height: 250px;
+
+    @include rwd($sm) {
+      width: 280px;
+    }
+
+    .el-input {
+      margin-bottom: 1rem;
+    }
+
+    .el-input__inner {
+      border-radius: 200px;
+      background: #5755559d;
+      border: none;
+      color: #d9d9d9;
+      height: 54px;
+      text-align: center;
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .el-input__icon {
+      margin-right: 1rem;
+      top: 3px;
+    }
+
+    .el-button {
+      width: 100%;
+      margin-top: 1rem;
+      border-radius: 200px;
+      font-size: 1.1rem;
+      background: $colorOrange;
+      font-weight: 700;
+      height: 54px;
+    }
+  }
+
+  .forgetPw,
+  .backToLogin {
+    color: $colorWhite;
+    letter-spacing: 1.5px;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .fogetPwDesc {
+    color: $colorWhite;
+    text-align: center;
+    margin: 1rem 0;
+
+    @include rwd($sm) {
+      font-size: 14px;
+    }
+  }
+
+  .codeBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .codeBoxInput .el-input__inner {
+    border-radius: 200px 0 0 200px !important;
+  }
+
+  .resendBtn {
+    width: 30% !important;
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    font-size: 1rem !important;
+    padding: 12px 6px !important ;
+    letter-spacing: 1.3px;
+    border-radius: 0 200px 200px 0 !important;
+
+    @include rwd($sm) {
+      font-size: 12px !important;
+      width: 35% !important;
+    }
+
+    &.el-button--warning.is-disabled {
+      color: #fff;
+      background-color: #b1b1b1;
+      border-color: #000;
+    }
+  }
+
+  .pwRoles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    @include rwd($sm) {
+      flex-direction: column;
+      align-items: center;
+      margin-left: -16px;
+      width: 100%;
+    }
+  }
+
+  .pwRole {
+    margin-right: 1.5rem;
+    color: #adadad;
+    transition: 0.5s;
+
+    @include rwd($sm) {
+      margin-right: 0;
+      margin-bottom: 0.25rem;
+    }
+
+    &.OkRole {
+      color: $colorOrange;
+      text-shadow: 0 0 2px $colorOrange;
+
+      .fa-check {
+        opacity: 1;
+      }
+    }
+  }
+
+  .fa-check {
+    opacity: 0;
+    margin-right: 0.15rem;
+    color: $colorOrange;
+    text-shadow: 0 0 2px $colorOrange;
+    transition: 0.5s;
+  }
+
+  // dialog
+  .annDialog {
+    border-radius: 10px;
+    width: 900px;
+    height: 70%;
+
+    @include rwd($md) {
+      width: 700px;
+    }
+
+    @include rwd($sm) {
+      width: 400px;
+    }
+
+    @include rwd($xs) {
+      width: 350px;
+    }
+
+    .el-dialog__header {
+      background: $colorOrange;
+      border-radius: 10px 10px 0 0;
+      padding: 1rem;
+    }
+
+    .el-dialog__title {
+      color: $colorWhite;
+      font-weight: 700;
+    }
+
+    .el-dialog__close {
+      color: $colorWhite;
+    }
+
+    .annCategoryBtn {
+      margin-right: 1rem;
+      height: 3rem;
+      width: 200px;
+      background-color: #e0e0e0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: 0.5s;
+
+      @include rwd($xs) {
+        width: 100px;
+      }
+
+      &.activeAnn {
+        background-color: #003979;
+        color: $colorWhite;
+      }
+    }
+  }
+}

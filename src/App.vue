@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <loading :active.sync="isLoading"></loading>test
+    <loading :active.sync="isLoading"></loading>
     <router-view />
   </div>
 </template>
@@ -16,12 +16,12 @@ export default {
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
-    }
+    },
   },
   components: {
-    Loading
+    Loading,
   },
-  methods: {}
+  methods: {},
 };
 </script>
 

@@ -21,7 +21,7 @@ const routes = [
     },
   },
   {
-    path: "/Login/:id",
+    path: "/Login",
     name: "Login",
     component: () => import("../views/Login.vue"),
     meta: {
@@ -49,7 +49,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {

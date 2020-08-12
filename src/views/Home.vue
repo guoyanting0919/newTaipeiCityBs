@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <h1>ad</h1>
+    <h1></h1>
   </div>
 </template>
 
@@ -16,8 +16,6 @@ export default {
   computed: {},
   methods: {},
   created() {},
-  mounted() {
-    console.log(process.env.VUE_APP_API);
-  }
+  mounted() {},
 };
 </script>
