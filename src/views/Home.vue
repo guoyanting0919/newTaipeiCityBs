@@ -1,15 +1,15 @@
 <template>
   <div id="home">
-    <h1></h1>
+    <Header></Header>
   </div>
 </template>
 
 <script>
-// import HelloWorld from '@/components/HelloWorld.vue'
+import Header from "@/components/Header.vue";
 
 export default {
   name: "Home",
-  components: {},
+  components: { Header },
   data() {
     return {};
   },

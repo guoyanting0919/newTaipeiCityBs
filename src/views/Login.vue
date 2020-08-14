@@ -1,5 +1,5 @@
 <template>
-  <div id="Login">
+  <div id="login">
     <div class="loginContainer">
       <!-- loginTitle -->
       <div class="loginTitle">
@@ -56,7 +56,7 @@
       <div class="loginBox" v-if="isForget==1">
         <el-input placeholder="請輸入您的帳號" v-model="accountInput" clearable></el-input>
         <el-input placeholder="請輸入您的密碼" v-model="passwordInput" show-password></el-input>
-        <el-button type="warning" round>登入</el-button>
+        <el-button type="warning" @click="handleLogin" round>登入</el-button>
         <div @click="isForget=2" class="forgetPw">忘記密碼?</div>
       </div>
       <!-- forgetInput -->
@@ -73,7 +73,7 @@
           <el-button
             :disabled="resendCount!==0"
             class="resendBtn"
-            @click="isForget=3"
+            @click="sendCode"
             type="warning"
             round
           >
@@ -87,8 +87,8 @@
       </div>
       <!-- newPwInput -->
       <div class="newPwInput" v-if="isForget==4">
-        <el-input placeholder="請輸入您的新密碼" v-model="newPwInput" clearable></el-input>
-        <el-input placeholder="請確認您的新密碼" v-model="newPwInputCheck" clearable></el-input>
+        <el-input placeholder="請輸入您的新密碼" v-model="newPwInput" show-password></el-input>
+        <el-input placeholder="請確認您的新密碼" v-model="newPwInputCheck" show-password></el-input>
         <el-button @click="newPwConfirm" type="warning" round>完成</el-button>
         <p class="fogetPwDesc">請依照步驟完成新密碼認證</p>
         <div @click="isForget=1" class="backToLogin">返回登入</div>
@@ -115,9 +115,9 @@
           class="annCategoryBtn"
         >A單位公告</button>
       </div>
-      <el-table :data="annDataFilter">
+      <el-table :data="annDataFilter" style="margin-top:1rem">
         <el-table-column property="title" label="公告事項"></el-table-column>
-        <el-table-column property="date" label="公告日期" width="100"></el-table-column>
+        <el-table-column property="date" label="公告日期" width="120"></el-table-column>
       </el-table>
     </el-dialog>
   </div>
@@ -129,7 +129,7 @@ export default {
   data() {
     return {
       // announcement
-      dialogAnnVisible: false,
+      dialogAnnVisible: true,
       annCategory: "行車公告",
       annData: [
         {
@@ -156,9 +156,9 @@ export default {
 
       // input
       isForget: 1,
-      accountInput: "",
-      passwordInput: "",
-      accountForgetInput: "",
+      accountInput: "test",
+      passwordInput: "test",
+      accountForgetInput: "test",
       codeInput: "",
       newPwInput: "",
       newPwInputCheck: "",
@@ -202,36 +202,183 @@ export default {
     },
   },
   methods: {
-    sendCode() {
+    handleLogin() {
       const vm = this;
-      clearInterval(this.timmer);
-      vm.isForget = 3;
-      vm.resendCount = 60;
-      vm.timmer = setInterval(() => {
-        vm.resendCount--;
-        if (vm.resendCount == 0) {
-          clearInterval(vm.timmer);
-        }
-      }, 1000);
+      if (vm.passwordInput == "" || vm.accountInput == "") {
+        vm.$alertM.fire({
+          icon: "error",
+          title: "帳號密碼欄不得為空！",
+        });
+      } else {
+        vm.$store.dispatch("loadingHandler", true);
+        vm.$api
+          .GetToken({
+            password: vm.passwordInput,
+            account: vm.accountInput,
+            appKey: "123321",
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              window.localStorage.setItem("NTPCToken", res.data.token);
+              vm.getUserInfoByToken();
+            } else {
+              vm.$alertM.fire({
+                icon: "error",
+                title: res.data.message,
+              });
+              vm.$store.dispatch("loadingHandler", false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
+    getUserInfoByToken() {
+      const vm = this;
+      vm.$api
+        .GetUserInfo()
+        .then((res) => {
+          if (res.data.code == 200) {
+            vm.$router.push("/");
+          } else {
+            vm.$alertM.fire({
+              icon: "error",
+              title: res.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          vm.$store.dispatch("loadingHandler", false);
+        });
+    },
+
+    // 傳送驗證碼
+    sendCode() {
+      clearInterval(this.timmer);
+      const vm = this;
+      vm.$store.dispatch("loadingHandler", true);
+      vm.$api
+        .ForgetPw({
+          step: 1,
+          account: vm.accountForgetInput,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            vm.isForget = 3;
+            vm.resendCount = 60;
+            vm.timmer = setInterval(() => {
+              vm.resendCount--;
+              if (vm.resendCount == 0) {
+                clearInterval(vm.timmer);
+              }
+            }, 1000);
+          } else {
+            vm.$alertM.fire({
+              icon: "error",
+              title: res.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          vm.$store.dispatch("loadingHandler", false);
+        });
+    },
+
+    //認證驗證碼是否正確
     valiCode() {
-      this.isForget = 4;
-      clearInterval(this.timmer);
+      const vm = this;
+      vm.$store.dispatch("loadingHandler", true);
+      vm.$api
+        .ForgetPw({
+          step: 2,
+          account: vm.accountForgetInput,
+          checkCode: vm.codeInput,
+        })
+        .then((res) => {
+          if (res.data.code == 200) {
+            this.isForget = 4;
+            clearInterval(this.timmer);
+          } else {
+            vm.$alertM.fire({
+              icon: "error",
+              title: res.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          vm.$store.dispatch("loadingHandler", false);
+          clearInterval(this.timmer);
+        });
     },
+
+    // 修改密碼
     newPwConfirm() {
       const vm = this;
-      if (vm.passwordOK) {
+      if (vm.passwordOK && vm.newPwInput === vm.newPwInputCheck) {
+        vm.$store.dispatch("loadingHandler", true);
+        vm.$api
+          .ForgetPw({
+            step: 3,
+            account: vm.accountForgetInput,
+            checkCode: vm.codeInput,
+            newPassword: vm.newPwInput,
+          })
+          .then((res) => {
+            if (res.data.code == 200) {
+              vm.$alertM.fire({
+                icon: "success",
+                title: `修改密碼成功!請重新登入!`,
+              });
+              vm.reset();
+              vm.isForget = 1;
+            } else {
+              vm.$alertM.fire({
+                icon: "error",
+                title: res.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            vm.$store.dispatch("loadingHandler", false);
+          });
+      } else if (!vm.passwordOK) {
         vm.$alertM.fire({
-          icon: "success",
-          title: `修改密碼成功!請重新登入!`,
+          icon: "error",
+          title: `請確認密碼格式是否正確`,
         });
       } else {
         vm.$alertM.fire({
           icon: "error",
-          title: `密碼格式有誤`,
+          title: `密碼欄位不相等`,
         });
       }
     },
+
+    // 欄位清空
+    reset() {
+      const vm = this;
+      vm.accountInput = "";
+      vm.passwordInput = "";
+      vm.accountForgetInput = "";
+      vm.codeInput = "";
+      vm.newPwInput = "";
+      vm.newPwInputCheck = "";
+    },
+
+    // 密碼格式REG驗證
     checkMinLength(val) {
       //8碼以上
       return val.length >= 8;

@@ -34,14 +34,14 @@ const errorHandle = (status, msg) => {
 
 // 設定 baseURL
 let instance = axios.create({
-  baseURL: "http://tccdonkeyapi.1966.org.tw/api/",
+  baseURL: "http://openauth.1966.org.tw/api/",
 });
 
 // request 攔截
 instance.interceptors.request.use(
   (config) => {
-    const token = store.state.token;
-    token && (config.headers.Authorization = `Bearer ${token}`);
+    const token = window.localStorage.NTPCToken;
+    token && (config.headers["X-Token"] = token);
     return config;
   },
   (error) => {
